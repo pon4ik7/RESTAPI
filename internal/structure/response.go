@@ -17,7 +17,6 @@ type EchoResponse struct {
 
 type UserCreateResponse struct {
 	Id        string    `json:"id"`
-	Uuid      string    `json:"uuid"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`
 }
@@ -44,10 +43,9 @@ func NewEchoResponse(message string, length int) EchoResponse {
 	}
 }
 
-func NewUserCreateResponse(id string, uuid string, username string, createdAt time.Time) UserCreateResponse {
+func NewUserCreateResponse(id string, username string, createdAt time.Time) UserCreateResponse {
 	return UserCreateResponse{
 		Id:        id,
-		Uuid:      uuid,
 		Username:  username,
 		CreatedAt: createdAt,
 	}

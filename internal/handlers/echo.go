@@ -15,6 +15,8 @@ func EchoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 1<<20) // 1MB
+
 	err := json.NewDecoder(r.Body).Decode(&requestBody)
 	if err != nil {
 		api.WriteError(w, http.StatusBadRequest, "Invalid request payload")
@@ -28,6 +30,7 @@ func EchoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if len(requestBody.Message) > 256 {
 		api.WriteError(w, http.StatusBadRequest, "Message too long (max 256)")
+		return
 	}
 
 	length := len(requestBody.Message)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"github.com/google/uuid"
 	"net/http"
 )
 
@@ -14,7 +15,9 @@ const RequestIDHeader = "X-Request-ID"
 
 func newRequestID() string {
 	b := make([]byte, 16)
-	_, _ = rand.Read(b)
+	if _, err := rand.Read(b); err != nil {
+		return uuid.NewString()
+	}
 	return hex.EncodeToString(b)
 }
 
