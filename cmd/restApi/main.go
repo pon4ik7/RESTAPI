@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+var path = "localhost:8080"
+
 func main() {
 
 	Init()
@@ -21,14 +23,21 @@ func main() {
 	router.HandleFunc("/api/ping", handlers.PongHandler).Methods("GET")
 	router.HandleFunc("/api/health", handlers.HealthHandler).Methods("GET")
 	router.HandleFunc("/api/echo", handlers.EchoHandler).Methods("POST")
+	router.HandleFunc("/api/users", handlers.CreateUserHandler).Methods("POST")
 
 	router.PathPrefix("/static/").
 		Handler(http.StripPrefix("/static/",
 			http.FileServer(http.Dir("./static"))))
 
-	println("Server started on localhost:8080")
-	log.Fatal(http.ListenAndServe("localhost:8080", middleware.MiddlewareLogger(router)))
+	println("Server started on", path)
 
+	handler := middleware.Chain(
+		router, // root
+		middleware.RequestLoggerMiddleware,
+		middleware.RequestIDMiddleware,
+	) // add new middleware to the end of the list IMPORTANT
+
+	log.Fatal(http.ListenAndServe(path, handler))
 }
 
 func Init() {

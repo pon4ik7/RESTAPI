@@ -21,6 +21,15 @@ func EchoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if requestBody.Message == "" {
+		api.WriteError(w, http.StatusBadRequest, "Message required")
+		return
+	}
+
+	if len(requestBody.Message) > 256 {
+		api.WriteError(w, http.StatusBadRequest, "Message too long (max 256)")
+	}
+
 	length := len(requestBody.Message)
 	response := structure.NewEchoResponse(requestBody.Message, length)
 	api.WriteJSON(w, http.StatusOK, response)

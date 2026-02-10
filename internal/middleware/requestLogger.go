@@ -36,9 +36,11 @@ func RequestLoggerMiddleware(next http.Handler) http.Handler {
 
 		next.ServeHTTP(lw, r) // send to next handler
 
+		rid := GetRequestID(r) // Request ID
+
 		log.Printf(
-			"Method: %s | Path: %s | Status: %d | Bytes = %d | Duration: %s ms",
-			r.Method, r.URL.Path, lw.status, lw.bytes, time.Since(start).Round(time.Millisecond).String(),
+			"RID: %s | Method: %s | Path: %s | Status: %d | Bytes = %d | Duration: %s",
+			rid, r.Method, r.URL.Path, lw.status, lw.bytes, time.Since(start).Round(time.Nanosecond).String(),
 		) // log info
 
 	})
