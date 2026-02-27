@@ -1,41 +1,52 @@
 package handlers
 
 import (
-	"RESTAPI/internal/api"
 	"RESTAPI/internal/structure"
+	"RESTAPI/internal/utils"
+	"database/sql"
 	"encoding/json"
 	"github.com/google/uuid"
 	"net/http"
 	"time"
 )
 
-func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		api.MethodNotAllowed(w)
-		return
-	}
+type UserHandler struct {
+	DB *sql.DB
+}
 
-	if r.ContentLength == 0 {
-		api.WriteError(w, http.StatusBadRequest, "Content required")
+func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		utils.MethodNotAllowed(w)
 		return
 	}
 
 	request := &structure.CreateUserRequest{}
-
-	err := json.NewDecoder(r.Body).Decode(request)
-
-	if err != nil {
-		api.WriteError(w, http.StatusBadRequest, "invalid request body")
+	if err := json.NewDecoder(r.Body).Decode(request); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, "invalid request body")
 		return
 	}
 
-	// TODO handle DB part
+	//hashedPass, err := utils.HashPassword(request.Password)
+	//if err != nil {
+	//	utils.WriteError(w, http.StatusInternalServerError, "security error")
+	//	return
+	//}
+
+	userID := uuid.NewString()
+	// db.SaveUser(userID, request.Username, hashedPass)
+
+	token, err := utils.GenerateToken(userID)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, "token error")
+		return
+	}
 
 	response := structure.NewUserCreateResponse(
-		uuid.NewString(),
+		userID,
 		request.Username,
 		time.Now(),
+		token,
 	)
 
-	api.WriteJSON(w, http.StatusCreated, response)
+	utils.WriteJSON(w, http.StatusCreated, response)
 }

@@ -1,6 +1,9 @@
+DROP TABLE Users;
+
 CREATE TABLE Users(
     id BIGINT PRIMARY KEY,
-    name VARCHAR,
-    age INT,
-    credential INT
+    username VARCHAR(10),
+    email VARCHAR(20),
+    hashPassword VARCHAR,
+    createdAt timestamp
 )

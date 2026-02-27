@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"RESTAPI/internal/exc"
 	"RESTAPI/internal/structure"
+	"RESTAPI/internal/utils/exc"
 	"encoding/json"
 	"log"
 	"net/http"

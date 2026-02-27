@@ -1,10 +1,10 @@
 # build
-FROM golang:1.25.2Mf AS build
+FROM golang:1.25.2 AS build
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd
+RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/server
 
 # run
 FROM gcr.io/distroless/base-debian12

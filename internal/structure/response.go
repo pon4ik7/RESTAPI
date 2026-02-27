@@ -19,6 +19,7 @@ type UserCreateResponse struct {
 	Id        string    `json:"id"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`
+	JWTKey    string    `json:"jwt_key"`
 }
 
 //-------------------------------------------
@@ -43,10 +44,11 @@ func NewEchoResponse(message string, length int) EchoResponse {
 	}
 }
 
-func NewUserCreateResponse(id string, username string, createdAt time.Time) UserCreateResponse {
+func NewUserCreateResponse(id string, username string, createdAt time.Time, jwt_key string) UserCreateResponse {
 	return UserCreateResponse{
 		Id:        id,
 		Username:  username,
 		CreatedAt: createdAt,
+		JWTKey:    jwt_key,
 	}
 }

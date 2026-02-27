@@ -2,14 +2,17 @@ package db
 
 import (
 	"database/sql"
+	"errors"
+	_ "github.com/jackc/pgx/v5/stdlib"
 	"os"
 	"time"
 )
 
-var database_url = os.Getenv("DATABASE_URL")
-
 func InitDB() (*sql.DB, error) {
-	dsn := os.Getenv(database_url)
+	dsn := os.Getenv("DATABASE_URL")
+	if dsn == "" {
+		return nil, errors.New("DATABASE_URL is not set")
+	}
 
 	db, err := sql.Open("pgx", dsn)
 	if err != nil {

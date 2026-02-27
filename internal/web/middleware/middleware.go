@@ -1,12 +1,14 @@
 package middleware
 
-import "net/http"
+import (
+	"github.com/gorilla/mux"
+	"net/http"
+)
 
 type Middleware func(http.Handler) http.Handler
 
-func Chain(handler http.Handler, m ...Middleware) http.Handler {
+func Chain(handler *mux.Router, m ...mux.MiddlewareFunc) {
 	for i := 0; i < len(m); i++ {
-		handler = m[i](handler)
+		handler.Use(m[i])
 	}
-	return handler
 }

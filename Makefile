@@ -4,6 +4,10 @@ up:
 down:
 	docker compose down
 
+run:
+	make down
+	make up
+
 logs:
 	docker compose logs -f
 
