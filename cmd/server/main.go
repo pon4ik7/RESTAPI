@@ -1,9 +1,9 @@
 package main
 
 import (
-	"RESTAPI/internal/config"
-	"RESTAPI/internal/handlers"
-	"RESTAPI/internal/middleware"
+	"RESTAPI/internal/exc"
+	handlers2 "RESTAPI/internal/web/handlers"
+	middleware2 "RESTAPI/internal/web/middleware"
 	"github.com/gorilla/mux"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
@@ -19,11 +19,11 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/", handlers.ShowPage).Methods("GET")
-	router.HandleFunc("/api/ping", handlers.PongHandler).Methods("GET")
-	router.HandleFunc("/api/health", handlers.HealthHandler).Methods("GET")
-	router.HandleFunc("/api/echo", handlers.EchoHandler).Methods("POST")
-	router.HandleFunc("/api/users", handlers.CreateUserHandler).Methods("POST")
+	router.HandleFunc("/", handlers2.ShowPage).Methods("GET")
+	router.HandleFunc("/api/ping", handlers2.PongHandler).Methods("GET")
+	router.HandleFunc("/api/health", handlers2.HealthHandler).Methods("GET")
+	router.HandleFunc("/api/echo", handlers2.EchoHandler).Methods("POST")
+	router.HandleFunc("/api/users", handlers2.CreateUserHandler).Methods("POST")
 
 	router.PathPrefix("/static/").
 		Handler(http.StripPrefix("/static/",
@@ -31,17 +31,17 @@ func main() {
 
 	println("Server started on", path)
 
-	handler := middleware.Chain(
+	handler := middleware2.Chain(
 		router, // root
-		middleware.RequestLoggerMiddleware,
-		middleware.RequestIDMiddleware,
+		middleware2.RequestLoggerMiddleware,
+		middleware2.RequestIDMiddleware,
 	) // add new middleware to the end of the list IMPORTANT
 
 	log.Fatal(http.ListenAndServe(path, handler))
 }
 
 func Init() {
-	config.StartTime = time.Now()
+	exc.StartTime = time.Now()
 	log.SetOutput(&lumberjack.Logger{
 		Filename:   "cmd/logs/server.log",
 		MaxSize:    10, // mb

@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"RESTAPI/internal/config"
+	"RESTAPI/internal/exc"
 	"RESTAPI/internal/structure"
 	"encoding/json"
 	"log"
@@ -11,7 +11,7 @@ import (
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(structure.NewHealthResponse("ok", time.Since(config.StartTime)))
+	err := json.NewEncoder(w).Encode(structure.NewHealthResponse("ok", time.Since(exc.StartTime)))
 	if err != nil {
 		log.Println(err)
 	}
