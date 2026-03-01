@@ -6,16 +6,18 @@ import (
 	"RESTAPI/internal/web/handlers"
 	"RESTAPI/internal/web/middleware"
 	"database/sql"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
-)
 
-var path = ":8080"
+	"github.com/gorilla/mux"
+)
 
 func main() {
 
 	utils.Init()
+
+	// var path = os.Getenv("BACKEND_PORT")
+	var path = ":8080"
 
 	database, err := db.InitDB()
 	if err != nil {
